@@ -2,9 +2,9 @@
 
 ## Overview
 
-JAMF Pro is one of the most common MDM solutions for macOS in enterprise environments. The JAMF agent binary lives at `/usr/local/jamf/bin/jamf` and handles all communication with the JAMF Pro server — policy execution, inventory collection, check-ins, software installs, and configuration profiles.
+JAMF Pro is one of the most common MDM solutions for macOS in enterprise environments. The JAMF agent binary lives at `/usr/local/jamf/bin/jamf` and handles all communication with the JAMF Pro server - policy execution, inventory collection, check-ins, software installs, and configuration profiles.
 
-This POC replaces the `jamf` binary with a bash wrapper that intercepts every invocation, logs it, and then passes through to the original binary. JAMF continues to function normally — the tampering is completely transparent to the MDM server, the admin console, and the end user.
+This POC replaces the `jamf` binary with a bash wrapper that intercepts every invocation, logs it, and then passes through to the original binary. JAMF continues to function normally - the tampering is completely transparent to the MDM server, the admin console, and the end user.
 
 ## How it works
 
@@ -24,15 +24,15 @@ This POC replaces the `jamf` binary with a bash wrapper that intercepts every in
 1. The original `jamf` binary is moved to `jamf.real` in the same directory
 2. A bash wrapper script is written to the original `jamf` path
 3. The wrapper logs the timestamp and all arguments to `/tmp/JAMF_proof.txt`
-4. Then `exec`s `jamf.real` with all original arguments — JAMF functions normally
+4. Then `exec`s `jamf.real` with all original arguments - JAMF functions normally
 
 Since the wrapper calls through to the real binary, JAMF inventory checks still report a "healthy" agent, policy runs still succeed, and the MDM server sees normal check-in behavior.
 
 ## Prerequisites
 
-- **Root access** — `/usr/local/jamf/bin/` is owned by root
-- **Target must have JAMF installed** — verify with `ls /usr/local/jamf/bin/jamf`
-- **SIP does not protect this path** — `/usr/local/` is not covered by System Integrity Protection
+- **Root access** - `/usr/local/jamf/bin/` is owned by root
+- **Target must have JAMF installed** - verify with `ls /usr/local/jamf/bin/jamf`
+- **SIP does not protect this path** - `/usr/local/` is not covered by System Integrity Protection
 
 ## Compile
 
@@ -93,12 +93,12 @@ cat /tmp/JAMF_proof.txt
 
 The wrapper sits at the choke point for all JAMF operations. In a real engagement, it could:
 
-- **Log all MDM commands** — see exactly what policies are being pushed, what scripts are running, what packages are being installed
-- **Selectively block policies** — drop `jamf policy` calls while letting `jamf recon` through so the agent still reports healthy
-- **Modify arguments** — change policy triggers, redirect package installs
-- **Intercept credentials** — JAMF policies can carry scripts with embedded credentials, API keys, or configuration secrets
-- **Persist across JAMF remediation** — since `jamf recon` and `jamf policy` both run through the wrapper, even JAMF's own self-healing mechanisms go through the attacker's code first
-- **Maintain stealth** — the MDM server sees normal check-ins because the wrapper forwards everything to the real binary
+- **Log all MDM commands** - see exactly what policies are being pushed, what scripts are running, what packages are being installed
+- **Selectively block policies** - drop `jamf policy` calls while letting `jamf recon` through so the agent still reports healthy
+- **Modify arguments** - change policy triggers, redirect package installs
+- **Intercept credentials** - JAMF policies can carry scripts with embedded credentials, API keys, or configuration secrets
+- **Persist across JAMF remediation** - since `jamf recon` and `jamf policy` both run through the wrapper, even JAMF's own self-healing mechanisms go through the attacker's code first
+- **Maintain stealth** - the MDM server sees normal check-ins because the wrapper forwards everything to the real binary
 
 ## Why the MDM server doesn't notice
 

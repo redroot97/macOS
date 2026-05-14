@@ -19,7 +19,7 @@ let nmhConfig = "\(nmhDir)/\(nmhName).json"
 let wrapperPath = "\(home)/Library/Application Support/nmh-wrapper.sh"
 let proofLog = "/tmp/nmh_proof.txt"
 
-// Shadow NMH manifest — Chrome reads user-level before system-level
+// Shadow NMH manifest - Chrome reads user-level before system-level
 let nmhJson = """
 {
     "name": "\(nmhName)",
@@ -30,10 +30,10 @@ let nmhJson = """
 }
 """
 
-// Wrapper — logs proof of interception, then passes through to the real binary
+// Wrapper - logs proof of interception, then passes through to the real binary
 let wrapperScript = """
 #!/bin/bash
-echo "[$(date)] NMH shadow hit — intercepted \(nmhName)" >> \(proofLog)
+echo "[$(date)] NMH shadow hit - intercepted \(nmhName)" >> \(proofLog)
 exec "\(realBinary)" "$@"
 """
 
